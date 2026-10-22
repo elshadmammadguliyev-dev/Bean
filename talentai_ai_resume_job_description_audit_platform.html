@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentAI ✦ AI CV və Vakansiya Auditi Platforması</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            navy: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#090d16',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Smooth score circular animation */
+    .score-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .glow-emerald {
+      box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.25);
+    }
+    .pulse-subtle {
+      animation: pulseSubtle 3s infinite ease-in-out;
+    }
+    @keyframes pulseSubtle {
+      0%, 100% { opacity: 0.95; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none bg-navy-900 text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 border border-brand-500/30">
+    <div id="toastIcon" class="w-7 h-7 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-sm font-bold">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <div>
+      <h5 id="toastTitle" class="text-xs uppercase tracking-wider font-semibold text-brand-400">Bildiriş</h5>
+      <p id="toastMessage" class="text-sm font-medium text-slate-200">Əməliyyat uğurla icra olundu.</p>
+    </div>
+  </div>
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-navy-950 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-500/20 text-brand-400 border border-brand-500/30">YENİ</span>
+        <span>Azərbaycan əmək bazarı və qlobal ATS alqoritmləri üçün ilk AI Audit Mühərriki ✦</span>
+      </div>
+      <div class="hidden sm:flex items-center gap-4 text-slate-400 text-xs">
+        <span class="hover:text-white cursor-pointer transition"><i class="fa-solid fa-headset mr-1"></i> Dəstək</span>
+        <span class="hover:text-white cursor-pointer transition">v2.4 Pro Versiya</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-brand-400 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/30 group-hover:scale-105 transition">
+          <i class="fa-solid fa-sparkles"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-extrabold text-2xl tracking-tight text-navy-950 flex items-center gap-1.5">
+            Talent<span class="text-brand-600">AI</span>
+            <span class="text-brand-500 text-sm">✦</span>
+          </span>
+          <span class="text-[10px] font-medium tracking-widest text-slate-400 uppercase -mt-1">Resume Intelligence</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+        <a href="#demo-section" class="text-brand-600 font-semibold hover:text-brand-700 transition flex items-center gap-1">
+          <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Canlı Audit
+        </a>
+        <a href="#dashboard" class="hover:text-navy-950 transition">Dashboard Nümunəsi</a>
+        <a href="#features" class="hover:text-navy-950 transition">Üstünlüklər</a>
+        <a href="#pricing" class="hover:text-navy-950 transition">Tariflər</a>
+      </div>
+
+      <!-- Action Items & User Menu -->
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher -->
+        <button class="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 flex items-center gap-1 transition">
+          <span>🇦🇿 AZ</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+        </button>
+
+        <!-- User Profile Pill -->
+        <div class="hidden sm:flex items-center gap-2 pl-2 border-l border-slate-200">
+          <div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-300 flex items-center justify-center font-bold text-slate-700 text-xs">
+            NM
+          </div>
+          <div class="text-left text-xs">
+            <p class="font-semibold text-slate-800 leading-tight">Nurlan M.</p>
+            <p class="text-slate-400 text-[10px]">HR & Civil Eng</p>
+          </div>
+        </div>
+
+        <button onclick="scrollToDemo()" class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-brand-600/20 hover:shadow-lg hover:shadow-brand-600/30 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+          <span>CV Analiz Et</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Hero Section -->
+  <main class="flex-grow">
+    <section class="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-brand-50/50 via-white to-[#F8FAFC]">
+      <!-- Background subtle decorative blobs -->
+      <div class="absolute -top-40 -right-40 w-96 h-96 bg-brand-200/40 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-1/2 -left-32 w-80 h-80 bg-emerald-100/50 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Hero Header -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-100/70 border border-brand-300/60 text-brand-800 text-xs font-semibold mb-6 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-brand-500 animate-ping"></span>
+            <span>ATS Skrininq & İstedad Şəbəkəsi</span>
+          </div>
+
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy-950 tracking-tight leading-[1.15] mb-6">
+            CV-nizi <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-emerald-500">ATS və Süni İntellekt</span> Standartlarına Uyğunlaşdırın
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
+            Vakansiyanın tələblərini və CV-nizi yükləyin. TalentAI saniyələr ərzində çatışmayan açar sözləri tapsın, təsir gücünü (Google XYZ formulu) hesablasın və müsahibə şansınızı 3 qat artırsın.
+          </p>
+        </div>
+
+        <!-- Interactive Upload / Input Area -->
+        <div id="demo-section" class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-200/90 p-5 sm:p-8 relative glow-emerald">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-3 w-3 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+              </span>
+              <h3 class="font-bold text-slate-900 text-base sm:text-lg">İnteraktiv Audit Simulyatoru</h3>
+            </div>
+            <span class="text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Sınaq Rejimi</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left: CV Upload Box -->
+            <div class="flex flex-col">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>1. Mövcud CV Faylınız</span>
+                <span class="text-brand-600 font-normal lowercase">PDF, DOCX (Maks 10MB)</span>
+              </label>
+
+              <div id="dropZone" onclick="simulateUpload()" class="flex-1 min-h-[190px] border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl bg-slate-50/70 hover:bg-brand-50/30 transition-all cursor-pointer flex flex-col items-center justify-center p-6 text-center group">
+                <div class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-brand-600 text-2xl mb-3 group-hover:scale-110 transition">
+                  <i id="uploadIcon" class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <h4 id="fileNameDisplay" class="font-bold text-sm text-slate-800 mb-1 group-hover:text-brand-700 transition">
+                  Faylı bura sürükləyin və ya klikləyin
+                </h4>
+                <p id="fileDescDisplay" class="text-xs text-slate-400 max-w-[200px]">
+                  Nurlan_Mutallimov_HR_CV.pdf (Hazır nümunə yüklənib)
+                </p>
+                <div class="mt-3 flex items-center gap-2">
+                  <span class="text-[11px] font-semibold text-brand-700 bg-brand-100/80 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    <i class="fa-solid fa-circle-check text-[10px]"></i> Skan üçün hazırdır
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Job Description Link/Text Area -->
+            <div class="flex flex-col">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center justify-between">
+                <span>2. Hədəf Vakansiya</span>
+                <span class="text-slate-400 font-normal">Jobsearch linki və ya Mətn</span>
+              </label>
+
+              <div class="flex flex-col h-full space-y-3">
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                    <i class="fa-solid fa-link"></i>
+                  </div>
+                  <input type="text" id="jobUrlInput" value="https://jobsearch.az/vacancies/senior-hr-business-partner" class="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-white" placeholder="https://vakansiya-linki...">
+                </div>
+
+                <div class="flex-1 relative">
+                  <textarea id="jobDescInput" rows="5" class="w-full h-full text-xs text-slate-700 rounded-2xl border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 bg-white resize-none custom-scrollbar leading-relaxed" placeholder="Və ya tələbləri bura yapışdırın...">Tələblər:
+- Minimum 4 il HRBP və ya İstedad İdarəetmə təcrübəsi.
+- Workforce Planning, Succession Planning və Change Management üzrə real təcrübə.
+- HR KPI və analitika (eNPS, retention, headcount budget) hesabatlılığı.
+- Tikinti/İnfrastruktur və ya logistika sektorunda çalışmış namizədlərə üstünlük verilir.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom CTA Button -->
+          <div class="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i class="fa-solid fa-shield-halved text-brand-600"></i>
+              <span>Fərdi məlumatlar tam şifrələnir və saxlanılmır.</span>
+            </div>
+
+            <button id="runAuditBtn" onclick="runLiveAuditSimulation()" class="w-full sm:w-auto bg-gradient-to-r from-brand-600 to-emerald-600 hover:from-brand-700 hover:to-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-brand-600/30 hover:shadow-xl hover:shadow-brand-600/40 transition transform active:scale-95 flex items-center justify-center gap-2 text-sm">
+              <span id="btnSpinner" class="hidden"><i class="fa-solid fa-circle-notch fa-spin text-sm"></i></span>
+              <span id="btnText">Dərin AI Auditi Başlat</span>
+              <i id="btnArrow" class="fa-solid fa-bolt text-amber-300 text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE AUDIT REPORT PREVIEW (DASHBOARD) -->
+    <section id="dashboard" class="py-16 bg-[#F8FAFC] border-t border-slate-200/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 text-brand-700 text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-square-poll-vertical"></i> Canlı Nəticə Paneli
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-navy-950">
+              CV & Vakansiya Uyğunluq Hesabatı
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Namizəd: <span class="font-semibold text-slate-800">Nurlan Mütəllimov</span> | Hədəf Rol: <span class="font-semibold text-brand-700">Senior HR Business Partner</span>
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2.5">
+            <button onclick="showToast('Audit hesabatı PDF olaraq hazırlandı!', 'success')" class="px-4 py-2 text-xs font-bold rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-file-pdf text-red-500 text-sm"></i>
+              <span>Auditi PDF Yüklə</span>
+            </button>
+
+            <button onclick="autoEnhanceCV()" class="px-5 py-2 text-xs font-bold rounded-xl bg-navy-900 hover:bg-navy-800 text-white shadow-md transition flex items-center gap-2">
+              <i class="fa-solid fa-sparkles text-brand-400"></i>
+              <span>CV-ni Avtomatik Yenilə ✦</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+          
+          <!-- Overall Score Card (4 Cols) -->
+          <div class="lg:col-span-4 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Ümumi Uyğunluq</span>
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-brand-100 text-brand-800">Güclü Nəticə</span>
+              </div>
+
+              <!-- Circular Progress SVG -->
+              <div class="relative w-44 h-44 mx-auto my-3 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" stroke="#E2E8F0" stroke-width="10" fill="transparent" />
+                  <circle id="scoreRingCircle" cx="60" cy="60" r="50" stroke="#10B981" stroke-width="10" stroke-dasharray="314.15" stroke-dashoffset="69" stroke-linecap="round" fill="transparent" class="score-circle" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span id="scoreDisplayNum" class="font-display text-4xl font-extrabold text-navy-950">78%</span>
+                  <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Match Score</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 text-center">
+              <p class="text-xs text-slate-600 mb-2">
+                CV-niz vakansiyanın <strong>əsas gözləntilərinin 78%-ni</strong> qarşılayır. Çatışmayan 3 əsas açar sözü əlavə etməklə skoru <strong>92%-ə</strong> çatdıra bilərsiniz.
+              </p>
+              <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-700 bg-brand-50 px-3 py-1 rounded-full">
+                <i class="fa-solid fa-chart-line-up"></i>
+                <span>Müsahibəyə çağırılma ehtimalı: <strong>Yüksək</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown Progress Bars (8 Cols) -->
+          <div class="lg:col-span-8 bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h4 class="font-bold text-navy-950 text-base">Kateqoriyalar üzrə Dərin Skorinq</h4>
+                <p class="text-xs text-slate-400">ATS və HR menecer baxış bucağından dörd təməl meyar</p>
+              </div>
+              <span class="text-xs text-slate-500 font-medium">Model: <strong class="text-brand-600">TalentAI-Sonnet</strong></span>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Item 1: ATS Oxunurluğu -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+                  <span class="text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-brand-600"></i> ATS Oxunurluğu və Format
+                  </span>
+                  <span class="text-brand-700 font-extrabold">92% <span class="font-normal text-slate-400">(Mükəmməl)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-brand-500 h-full rounded-full transition-all duration-1000" style="width: 92%"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Cədvəl, xüsusi şriftlər və ya oxunmayan simvollar aşkar edilmədi. Qlobal ATS alətləri rahat oxuyur.</p>
+              </div>
+
+              <!-- Item 2: Açar Söz Uyğunluğu -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+                  <span class="text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-amber-500"></i> Açar Söz və Bacarıq Uyğunluğu
+                  </span>
+                  <span class="text-amber-600 font-extrabold">64% <span class="font-normal text-slate-400">(Təkmilləşdirilməli)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-amber-500 h-full rounded-full transition-all duration-1000" style="width: 64%"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Vakansiya mətnində xüsusi vurğulanan 4 strateji termin CV-də qeyd olunmayıb.</p>
+              </div>
+
+              <!-- Item 3: Təsir Gücü (Impact & Metrics) -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+                  <span class="text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-bullseye text-brand-600"></i> Təsir Gücü və Ölçülə Bilən Nəticələr (Metrics)
+                  </span>
+                  <span class="text-brand-700 font-extrabold">71% <span class="font-normal text-slate-400">(Yaxşı)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-brand-500 h-full rounded-full transition-all duration-1000" style="width: 71%"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1">Bir çox öhdəliklər sadəcə vəzifə kimi qeyd olunub, faiz və rəqəmsal dəyərlər (XYZ formulu) artırıla bilər.</p>
+              </div>
+
+              <!-- Item 4: Struktur və Xronologiya -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+                  <span class="text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-brand-600"></i> Bölmə Sıralaması & Standartlar
+                  </span>
+                  <span class="text-brand-700 font-extrabold">100% <span class="font-normal text-slate-400">(Tam)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-emerald-500 h-full rounded-full transition-all duration-1000" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Missing Keywords Interactive Pill Section -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm mb-8">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h4 class="font-bold text-navy-950 text-base flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                Vakansiyada Tələb Olunan, Lakin CV-də Tapılmayan Açar Sözlər
+              </h4>
+              <p class="text-xs text-slate-400 mt-0.5">CV-nizə əlavə etmək üçün terminlərin üzərinə klikləyin:</p>
+            </div>
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full self-start">
+              <span id="keywordCount">5</span> vacib çatışmazlıq
+            </span>
+          </div>
+
+          <div class="flex flex-wrap gap-2.5" id="keywordContainer">
+            <!-- Keyword Badges -->
+            <button onclick="toggleKeyword(this, 'Workforce Planning')" class="group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i>
+              <span>Workforce Planning</span>
+            </button>
+
+            <button onclick="toggleKeyword(this, 'Succession Planning')" class="group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i>
+              <span>Succession Planning</span>
+            </button>
+
+            <button onclick="toggleKeyword(this, 'Change Management')" class="group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i>
+              <span>Change Management</span>
+            </button>
+
+            <button onclick="toggleKeyword(this, 'HR KPIs & Analytics')" class="group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i>
+              <span>HR KPIs & Analytics</span>
+            </button>
+
+            <button onclick="toggleKeyword(this, 'eNPS & Retention')" class="group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i>
+              <span>eNPS & Retention</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Line-by-line Rewriting: Before vs After -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div>
+              <div class="inline-flex items-center gap-1.5 text-brand-600 text-xs font-bold uppercase tracking-wider mb-1">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Sətirbəsətir Təkmilləşdirmə
+              </div>
+              <h3 class="font-extrabold text-navy-950 text-lg">Google XYZ Formulu ilə Cümlələrin Yenidən Yazılması</h3>
+              <p class="text-xs text-slate-500">"X nəticəsinə çatdım, Y ilə ölçüldü, Z fəaliyyətini həyata keçirərək."</p>
+            </div>
+
+            <!-- Tab Pills -->
+            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+              <button onclick="switchSuggestion(1)" id="tabBtn1" class="px-3 py-1.5 rounded-lg bg-white text-navy-900 shadow-sm transition">Nümunə 1</button>
+              <button onclick="switchSuggestion(2)" id="tabBtn2" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-navy-900 transition">Nümunə 2</button>
+              <button onclick="switchSuggestion(3)" id="tabBtn3" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-navy-900 transition">Nümunə 3</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Content Box -->
+          <div id="suggestionBox" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <!-- Left: Current Bullet (Before) -->
+            <div class="p-5 rounded-2xl bg-rose-50/50 border border-rose-200/70">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase text-rose-700 tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-xmark"></i> Orijinal Cümlə (CV-dən)
+                </span>
+                <span class="text-[10px] font-semibold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">Passiv / Metriksiz</span>
+              </div>
+              <p id="beforeText" class="text-sm text-slate-700 leading-relaxed font-normal">
+                "Şöbələrdə işçi məmnuniyyəti sorğularını keçirdim və rəhbərliyə təqdim etdim."
+              </p>
+              <div class="mt-3 text-[11px] text-rose-700 font-medium">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i> Xəta: Nəticə və rəqəmsal təsir göstərilməyib. ATS və rekruter üçün zəif bənddir.
+              </div>
+            </div>
+
+            <!-- Right: AI Enhanced Suggestion (After) -->
+            <div class="p-5 rounded-2xl bg-brand-50/70 border border-brand-300">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase text-brand-800 tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-sparkles text-brand-600"></i> AI Tərəfindən Gücləndirilmiş
+                </span>
+                <span class="text-[10px] font-bold bg-brand-200/80 text-brand-900 px-2 py-0.5 rounded-full">+32% Təsir Skoru</span>
+              </div>
+              <p id="afterText" class="text-sm text-slate-800 leading-relaxed font-medium">
+                "500+ əməkdaş arasında eNPS sorğusunu koordinasiya edərək komanda məmnuniyyətini 6 ayda 18% artırmağa yönəlmiş 4 əsas fəaliyyət planını uğurla tətbiq etdim."
+              </p>
+              <div class="mt-3 text-[11px] text-brand-800 font-medium flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-check text-brand-600"></i>
+                <span>Metriklər (500+, 18%) və açar sözlər (eNPS, koordinasiya) daxil edildi.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons for Suggestions -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="flex items-center gap-2">
+              <button onclick="applySuggestion()" class="px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-check"></i>
+                <span>Bu Cümləni CV-yə Tətbiq Et</span>
+              </button>
+              <button onclick="regenerateSuggestion()" class="px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-rotate text-slate-400"></i>
+                <span>Fərqli Variant Təklif Et</span>
+              </button>
+            </div>
+
+            <span class="text-xs text-slate-400">Ümumi düzəliş edilə bilən bəndlər: <strong>3/8</strong></span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Why TalentAI / Features Section -->
+    <section id="features" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="text-xs font-bold tracking-widest text-brand-600 uppercase bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
+            Fərqimiz Nədədir?
+          </span>
+          <h2 class="text-3xl font-display font-extrabold text-navy-950 mt-4">
+            Sadəcə Yazı Düzəlişi Deyil, Strateji Karyera Aləti
+          </h2>
+          <p class="text-sm sm:text-base text-slate-500 mt-2">
+            İnternetdəki standart botlardan fərqli olaraq yerli əmək bazarı və beynəlxalq ATS tələblərinə uyğun kalibrlənmişdir.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Card 1 -->
+          <div class="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-brand-400 transition-all duration-300 hover:-translate-y-1 group">
+            <div class="w-14 h-14 rounded-2xl bg-brand-100/80 text-brand-700 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+            <h3 class="font-display font-bold text-lg text-navy-950 mb-2">Lokal Bazar & Qlobal ATS</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Azərbaycan və ingilis dillərində olan vakansiya mətnlərini (Jobsearch, Boss.az, LinkedIn) təhlil edir, morfoloji uyğunsuzluqları aradan qaldırır.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-brand-400 transition-all duration-300 hover:-translate-y-1 group">
+            <div class="w-14 h-14 rounded-2xl bg-brand-100/80 text-brand-700 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+              <i class="fa-solid fa-crosshairs"></i>
+            </div>
+            <h3 class="font-display font-bold text-lg text-navy-950 mb-2">Dəqiq Açar Söz Skorinqi</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              İşə qəbul proqramlarının (Workday, Taleo, Greenhouse) axtardığı "Hard & Soft skills" terminlərini filtrdən keçirərək çatışmayanları dərhal aşkar edir.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="p-8 rounded-3xl bg-[#F8FAFC] border border-slate-200 hover:border-brand-400 transition-all duration-300 hover:-translate-y-1 group">
+            <div class="w-14 h-14 rounded-2xl bg-brand-100/80 text-brand-700 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <h3 class="font-display font-bold text-lg text-navy-950 mb-2">Təsir Gücü (Google XYZ)</h3>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Monoton vəzifə öhdəliklərini real ölçülə bilən nailiyyətlərə çevirərək rekruterin ilk 6 saniyəlik baxışında diqqət cəlb etmənizi təmin edir.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Pricing / Token Section -->
+    <section id="pricing" class="py-16 bg-[#F8FAFC] border-t border-slate-200">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-navy-950">
+            Hər Kəs Üçün Əlçatan Karyera Dəstəyi
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">İlkin test tamamilə pulsuzdur</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          <!-- Free Plan -->
+          <div class="bg-white p-7 rounded-3xl border border-slate-200 flex flex-col justify-between">
+            <div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Başlanğıc</span>
+              <h3 class="font-display text-2xl font-bold text-navy-950 mt-1 mb-3">Pulsuz Sınaq</h3>
+              <div class="text-3xl font-extrabold text-navy-950 mb-4">0 AZN <span class="text-xs font-normal text-slate-400">/ daimi</span></div>
+              <ul class="text-xs space-y-2.5 text-slate-600 mb-6">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-600"></i> Ayda 2 dəfə CV skanı</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-600"></i> Ümumi Match Score təyini</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-600"></i> İlk 3 çatışmayan açar söz</li>
+              </ul>
+            </div>
+            <button onclick="showToast('Siz artıq Pulsuz sınaq planındasınız!', 'info')" class="w-full py-2.5 rounded-xl border border-slate-300 font-bold text-xs hover:bg-slate-50 text-slate-700 transition">
+              Cari Plan
+            </button>
+          </div>
+
+          <!-- Pro Plan -->
+          <div class="bg-navy-900 p-7 rounded-3xl border-2 border-brand-500 text-white flex flex-col justify-between relative shadow-xl shadow-brand-900/20">
+            <div class="absolute -top-3 right-6 bg-brand-500 text-navy-950 text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">
+              Tövsiyə Edilən
+            </div>
+            <div>
+              <span class="text-xs font-bold text-brand-400 uppercase tracking-wider">Pro Karyera</span>
+              <h3 class="font-display text-2xl font-bold text-white mt-1 mb-3">Limitsiz Audit</h3>
+              <div class="text-3xl font-extrabold text-white mb-4">12 AZN <span class="text-xs font-normal text-slate-400">/ ay</span></div>
+              <ul class="text-xs space-y-2.5 text-slate-300 mb-6">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> Limitsiz CV & Vakansiya müqayisəsi</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> Google XYZ formulu ilə tam yenidən yazılma</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> ATS uyğun formatda PDF/Word ixrac</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> Prioritet dəstək</li>
+              </ul>
+            </div>
+            <button onclick="showToast('Pro plana keçid tezliklə aktiv olacaq!', 'success')" class="w-full py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 font-bold text-xs text-navy-950 transition shadow-lg shadow-brand-500/25">
+              Pro Plana Keç ✦
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-navy-950 text-slate-400 py-12 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold">
+          <i class="fa-solid fa-sparkles text-xs"></i>
+        </div>
+        <div>
+          <span class="font-bold text-white text-sm">TalentAI</span>
+          <p class="text-[11px] text-slate-400">Bütün hüquqlar qorunur © 2026</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6 text-slate-300">
+        <a href="#" class="hover:text-brand-400 transition">Məxfilik Siyasəti</a>
+        <a href="#" class="hover:text-brand-400 transition">Xidmət Şərtləri</a>
+        <a href="#" class="hover:text-brand-400 transition">Əlaqə</a>
+      </div>
+
+      <div class="flex items-center gap-3 text-slate-400 text-sm">
+        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-brand-600 hover:text-white flex items-center justify-center transition"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Interactive Prototype Logic -->
+  <script>
+    // Toast notification utility
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = message;
+      
+      if (type === 'success') {
+        toastTitle.innerText = "Uğurlu";
+        toastTitle.className = "text-xs uppercase tracking-wider font-semibold text-brand-400";
+        toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+        toastIcon.className = "w-7 h-7 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-sm font-bold";
+      } else {
+        toastTitle.innerText = "Məlumat";
+        toastTitle.className = "text-xs uppercase tracking-wider font-semibold text-amber-400";
+        toastIcon.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+        toastIcon.className = "w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold";
+      }
+
+      toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-100px]', 'opacity-0');
+      }, 3500);
+    }
+
+    // Scroll helper
+    function scrollToDemo() {
+      document.getElementById('demo-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Simulate drag and drop upload
+    function simulateUpload() {
+      const display = document.getElementById('fileNameDisplay');
+      const desc = document.getElementById('fileDescDisplay');
+      const icon = document.getElementById('uploadIcon');
+
+      display.innerText = "Nurlan_Mutallimov_Updated_CV.pdf";
+      desc.innerText = "Fayl uğurla oxundu (148 KB)";
+      icon.className = "fa-solid fa-file-pdf text-brand-600";
+      showToast("Yeni CV faylı uğurla yükləndi!", "success");
+    }
+
+    // Interactive Audit Runner
+    function runLiveAuditSimulation() {
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const btnArrow = document.getElementById('btnArrow');
+      const ring = document.getElementById('scoreRingCircle');
+      const scoreNum = document.getElementById('scoreDisplayNum');
+
+      btnText.innerText = "CV Analiz Edilir...";
+      btnSpinner.classList.remove('hidden');
+      btnArrow.classList.add('hidden');
+
+      setTimeout(() => {
+        btnText.innerText = "Dərin AI Auditi Başlat";
+        btnSpinner.classList.add('hidden');
+        btnArrow.classList.remove('hidden');
+
+        // Update score dynamically
+        scoreNum.innerText = "84%";
+        // 314.15 is full circumference (2 * pi * 50)
+        // 84% means remaining offset is 314.15 * (1 - 0.84) ≈ 50.2
+        ring.style.strokeDashoffset = "50.2";
+
+        showToast("Audit tamamlandı! Uyğunluq skoru yeniləndi: 84%", "success");
+        document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+      }, 1200);
+    }
+
+    // Keyword interactive toggle
+    let remainingKeywords = 5;
+    function toggleKeyword(btn, keywordName) {
+      if (btn.classList.contains('bg-brand-100')) {
+        // Untoggle
+        btn.className = "group px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200/80 text-amber-800 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-800 transition flex items-center gap-2";
+        btn.innerHTML = `<i class="fa-solid fa-plus text-[10px] text-amber-500 group-hover:text-brand-600"></i><span>${keywordName}</span>`;
+        remainingKeywords++;
+      } else {
+        // Marked as added
+        btn.className = "group px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-100 border border-brand-300 text-brand-900 transition flex items-center gap-2 shadow-xs";
+        btn.innerHTML = `<i class="fa-solid fa-check text-[10px] text-brand-600"></i><span>${keywordName} (Əlavə edildi)</span>`;
+        remainingKeywords = Math.max(0, remainingKeywords - 1);
+        showToast(`"${keywordName}" bacarığı hədəf CV strukturuna daxil edildi!`, "success");
+      }
+      document.getElementById('keywordCount').innerText = remainingKeywords;
+    }
+
+    // Suggestions Tab Switcher Data
+    const suggestionsData = {
+      1: {
+        before: `"Şöbələrdə işçi məmnuniyyəti sorğularını keçirdim və rəhbərliyə təqdim etdim."`,
+        beforeNote: `Xəta: Nəticə və rəqəmsal təsir göstərilməyib. ATS və rekruter üçün zəif bənddir.`,
+        after: `"500+ əməkdaş arasında eNPS sorğusunu koordinasiya edərək komanda məmnuniyyətini 6 ayda 18% artırmağa yönəlmiş 4 əsas fəaliyyət planını uğurla tətbiq etdim."`,
+        afterNote: `Metriklər (500+, 18%) və açar sözlər (eNPS, koordinasiya) daxil edildi.`,
+      },
+      2: {
+        before: `"Vakansiyalar üçün namizədlərlə müsahibələr apardım və işə qəbul etdim."`,
+        beforeNote: `Xəta: Müddət, büdcə və keyfiyyət ölçüsü (Time-to-hire) yoxdur.`,
+        after: `"İllik 40+ mühəndis və texniki vakansiyanın işə qəbulunu idarə edərək orta 'Time-to-Hire' müddətini 42 gündən 28 günə endirdim (33% sürətlənmə)."`,
+        afterNote: `Vakansiya sayı (40+) və vaxt qənaəti faizi (33%) əlavə olundu.`,
+      },
+      3: {
+        before: `"İşçilərin təlim planlarını hazırladım və təşkil etdim."`,
+        beforeNote: `Xəta: Nəticə etibarilə biznesə və məhsuldarlığa verdiyi töhfə görünmür.`,
+        after: `"İstedadların inkişafı (Succession Planning) çərçivəsində 60+ rəhbər üçün liderlik proqramı təşkil edərək daxili yüksəliş faizini 25% artırdım."`,
+        afterNote: `Succession Planning açar sözü və 25% daxili yüksəliş metriki artırıldı.`,
+      }
+    };
+
+    function switchSuggestion(index) {
+      // Tab styling
+      for (let i = 1; i <= 3; i++) {
+        const btn = document.getElementById(`tabBtn${i}`);
+        if (i === index) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-white text-navy-900 shadow-sm transition";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg text-slate-500 hover:text-navy-900 transition";
+        }
+      }
+
+      const data = suggestionsData[index];
+      document.getElementById('beforeText').innerText = data.before;
+      document.getElementById('afterText').innerText = data.after;
+    }
+
+    function applySuggestion() {
+      showToast("Təkmilləşdirilmiş cümlə CV layihənizə uğurla əlavə olundu!", "success");
+    }
+
+    function regenerateSuggestion() {
+      showToast("AI alternativ variant hazırlayır...", "info");
+      setTimeout(() => {
+        document.getElementById('afterText').innerText = 
+          `"Şirkətdaxili işçi məmnuniyyətini mütəmadi qiymətləndirərək işçi axıcılığını (turnover) 12% azaltdım və əsas təklifləri icra etdim."`;
+        showToast("Yeni alternativ təklif hazırlandı!", "success");
+      }, 700);
+    }
+
+    function autoEnhanceCV() {
+      showToast("Bütün çatışmayan açar sözlər və gücləndirilmiş cümlələr tətbiq olunur...", "info");
+      setTimeout(() => {
+        const scoreNum = document.getElementById('scoreDisplayNum');
+        const ring = document.getElementById('scoreRingCircle');
+        scoreNum.innerText = "96%";
+        ring.style.strokeDashoffset = "12.5";
+        showToast("Təbriklər! CV-niz 96% mükəmməl uyğunluq səviyyəsinə yüksəldildi! ✦", "success");
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
